@@ -3,11 +3,6 @@ FROM CovidProject.coviddeaths
 ORDER BY 3,4;
 
 
--- Change date format from text to date
-
-SELECT str_to_date('date','%d/%m/%Y') as dates, date
-FROM coviddeaths;
-
 -- Select the data for exploration
 
 SELECT date, location, population, new_cases, total_cases, new_deaths, total_deaths
@@ -21,6 +16,10 @@ SELECT date, location, population, total_cases, total_deaths, (total_deaths / to
 FROM coviddeaths
 ORDER BY 2;
 
+-- UNITED KINGDOM
+
+-- Shows the death rates of COVID over time
+
 SELECT date, location, population, total_cases, total_deaths, (total_deaths / total_cases) * 100 AS death_rate
 FROM coviddeaths
 WHERE location LIKE '%kingdom%'
@@ -33,7 +32,7 @@ FROM coviddeaths
 WHERE location LIKE '%kingdom%'
 ORDER BY 2;
 
--- Looking at the United Kingdom infection rate through time
+-- Looking at the infection rate through time
 
 SELECT date, location, population, new_cases, (new_cases / population) * 100 AS infection_rate
 FROM coviddeaths
@@ -48,6 +47,8 @@ WHERE location LIKE '%kingdom%'
 ORDER BY 5 DESC
 LIMIT 1;
 
+
+-- 
 -- Looking at countries with the highest infection count per its population
 
 SELECT location, population, MAX(total_cases) AS highest_infection_count, (MAX(total_cases / population)) * 100 AS percent_population_infected
@@ -57,15 +58,12 @@ ORDER BY percent_population_infected DESC;
 
 -- Looking at highest infection rate for all countries
 
--- ILL LIKE TO ADD THE DATES TOO
-
 SELECT DISTINCT(location), (MAX(new_cases / population)) * 100 AS highest_infection_rate, date
 FROM coviddeaths
 GROUP BY location
 ORDER BY highest_infection_rate DESC;
 
 -- Looking at total death counts for individual countries, sorting from the highest
-
 
 SELECT location, MAX(CAST(total_deaths AS SIGNED)) AS total_death_count
 FROM coviddeaths
@@ -100,11 +98,14 @@ WHERE continent = '' AND
     location NOT REGEXP 'income'
 GROUP BY date;
 
+-- total cases and total number of deaths worldwide till Oct 2022
 
 SELECT DISTINCT(continent), MAX(total_cases) as totalcases, MAX(CAST(total_deaths AS SIGNED)) AS totaldeaths
 FROM coviddeaths
 where continent != ''
 GROUP BY continent;
+
+-- global case count, global death count and global death rate as at Oct 2022
 
 SELECT SUM(new_cases) AS global_case_count,
        SUM(CAST(new_deaths AS SIGNED)) AS global_death_count,
